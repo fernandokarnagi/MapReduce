@@ -1,4 +1,4 @@
-package fits.hadoop.mapreduce.wordcount;
+package fits.hadoop.mapreduce.commodityprice;
 
 import java.io.IOException;
 
