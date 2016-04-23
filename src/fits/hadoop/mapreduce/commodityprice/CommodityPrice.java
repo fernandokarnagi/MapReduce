@@ -1,4 +1,4 @@
-package fits.hadoop.mapreduce.wordcount;
+package fits.hadoop.mapreduce.commodityprice;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

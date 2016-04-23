@@ -6,7 +6,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+public class CommodityPriceReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
 	@Override
 	protected void reduce(Text text, Iterable<IntWritable> values,

@@ -6,7 +6,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class WordCountMapper extends Mapper<Object, Text, Text, IntWritable> {
+public class CommodityPriceMapper extends Mapper<Object, Text, Text, IntWritable> {
 
 	private final IntWritable ONE = new IntWritable(1);
 	private Text word = new Text();
