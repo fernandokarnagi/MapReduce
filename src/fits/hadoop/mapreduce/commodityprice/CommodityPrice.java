@@ -3,7 +3,7 @@ package fits.hadoop.mapreduce.commodityprice;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -14,14 +14,17 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class CommodityPrice {
 
 	public static void main(String[] args) throws Exception {
-		Path inputPath = new Path("/Users/fernando/Work/Apps/Hadoop/wordcount/FL_insurance_sample.csv");
-		Path outputDir = new Path("/Users/fernando/Work/Apps/Hadoop/wordcount/output");
+//		Path inputPath = new Path("/Users/fernando/Work/Apps/Hadoop/commodityprice/");
+//		Path outputDir = new Path("/Users/fernando/Work/Apps/Hadoop/commodityprice/output");
+
+		Path inputPath = new Path(args[0]);
+		Path outputDir = new Path(args[1]);
 
 		// Create configuration
 		Configuration conf = new Configuration(true);
 
 		// Create job
-		Job job = new Job(conf, "WordCount");
+		Job job = new Job(conf, "CommodityPrice");
 		job.setJarByClass(CommodityPriceMapper.class);
 
 		// Setup MapReduce
@@ -31,7 +34,7 @@ public class CommodityPrice {
 
 		// Specify key / value
 		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(IntWritable.class);
+		job.setOutputValueClass(DoubleWritable.class);
 
 		// Input
 		FileInputFormat.addInputPath(job, inputPath);

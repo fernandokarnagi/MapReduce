@@ -2,24 +2,31 @@ package fits.hadoop.mapreduce.commodityprice;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class CommodityPriceMapper extends Mapper<Object, Text, Text, IntWritable> {
-
-	private final IntWritable ONE = new IntWritable(1);
-	private Text word = new Text();
+public class CommodityPriceMapper extends Mapper<Object, Text, Text, DoubleWritable> {
 
 	@Override
-	protected void map(Object key, Text value, Mapper<Object, Text, Text, IntWritable>.Context context)
+	protected void map(Object key, Text value, Mapper<Object, Text, Text, DoubleWritable>.Context context)
 			throws IOException, InterruptedException {
-
-		String[] csv = value.toString().split(",");
-		for (String str : csv) {
-			word.set(str);
-			context.write(word, ONE);
+		String[] rowArr = value.toString().split(",");
+		if (!rowArr[0].equalsIgnoreCase("date")) {
+			System.out.println("Processing date [" + rowArr[0] + "]");
+			double totalSum = 0d;
+			int totalRecord = 0;
+			for (int i = 1; i < rowArr.length; i++) {
+				if (rowArr[i] != null && rowArr[i].length() > 0) {
+					totalSum = totalSum + Double.parseDouble(rowArr[i]);
+					totalRecord++;
+				}
+			}
+			context.write(new Text(rowArr[0]), new DoubleWritable(totalSum / totalRecord));
 		}
 	}
+
+	// private final IntWritable ONE = new IntWritable(1);
+	// private Text word = new Text();
 
 }
