@@ -6,12 +6,14 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+import fits.hadoop.util.PropUtil;
+
 public class CommodityPriceMapper extends Mapper<Object, Text, Text, DoubleWritable> {
 
 	@Override
 	protected void map(Object key, Text value, Mapper<Object, Text, Text, DoubleWritable>.Context context)
 			throws IOException, InterruptedException {
-		String[] rowArr = value.toString().split(",");
+		String[] rowArr = PropUtil.csvSplit(value.toString(), ",");
 		if (!rowArr[0].equalsIgnoreCase("date")) {
 			System.out.println("Processing date [" + rowArr[0] + "]");
 			double totalSum = 0d;
