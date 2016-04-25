@@ -1,6 +1,9 @@
 package fits.hadoop.mapreduce.customformat;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -30,7 +33,19 @@ public class CommodityPriceMapper extends Mapper<Object, Text, Text, CommodityPr
 			double yearVal = totalSum / totalRecord;
 			CommodityPriceBean bean = new CommodityPriceBean(yearVal, yearVal, yearVal, yearVal, 1);
 			logger.info("Emitting bean: " + bean);
-			context.write(new Text(rowArr[0]), bean);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date d = sdf.parse(rowArr[0]);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(d);
+				int year = cal.get(Calendar.YEAR);
+				context.write(new Text(String.valueOf(year)), bean);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			
 		}
 	}
 }

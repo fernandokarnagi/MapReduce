@@ -39,7 +39,9 @@ public class CommodityPrice extends Configured implements Tool {
 
 		// Setup MapReduce
 		job.setMapperClass(CommodityPriceMapper.class);
+		job.setCombinerClass(CommodityPriceReducer.class);
 		job.setReducerClass(CommodityPriceReducer.class);
+
 		job.setNumReduceTasks(1);
 
 		// Specify key / value
