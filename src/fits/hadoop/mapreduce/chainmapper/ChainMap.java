@@ -5,6 +5,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -16,6 +17,8 @@ import org.apache.hadoop.util.ToolRunner;
 
 import fits.hadoop.mapreduce.commodityprice.CommodityPriceMapper;
 import fits.hadoop.mapreduce.commodityprice.CommodityPriceReducer;
+import fits.hadoop.mapreduce.commodityprice.CommodityPriceYearCalcMapper;
+import fits.hadoop.mapreduce.commodityprice.CommodityPriceYearCalcReducer;
 
 public class ChainMap extends Configured implements Tool {
 
@@ -48,7 +51,7 @@ public class ChainMap extends Configured implements Tool {
 		// First Job
 
 		// Create job
-		Job job = new Job(conf, "CommodityPrice");
+		Job job = new Job(conf, "CommodityPrice_AverageMonthly");
 		job.setJarByClass(CommodityPriceMapper.class);
 
 		// Setup MapReduce
@@ -65,7 +68,7 @@ public class ChainMap extends Configured implements Tool {
 		job.setInputFormatClass(TextInputFormat.class);
 
 		// Output
-		FileOutputFormat.setOutputPath(job, outputDir);
+		FileOutputFormat.setOutputPath(job, tempDir);
 		job.setOutputFormatClass(TextOutputFormat.class);
 
 		// Execute job
@@ -74,20 +77,20 @@ public class ChainMap extends Configured implements Tool {
 		// Second Job
 
 		// Create job
-		job = new Job(conf, "CommodityPrice");
-		job.setJarByClass(CommodityPriceMapper.class);
+		job = new Job(conf, "CommodityPrice_AverageYearly");
+		job.setJarByClass(CommodityPriceYearCalcMapper.class);
 
 		// Setup MapReduce
-		job.setMapperClass(CommodityPriceMapper.class);
-		job.setReducerClass(CommodityPriceReducer.class);
+		job.setMapperClass(CommodityPriceYearCalcMapper.class);
+		job.setReducerClass(CommodityPriceYearCalcReducer.class);
 		job.setNumReduceTasks(1);
 
 		// Specify key / value
-		job.setOutputKeyClass(Text.class);
+		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(DoubleWritable.class);
 
 		// Input
-		FileInputFormat.addInputPath(job, inputPath);
+		FileInputFormat.addInputPath(job, tempDir);
 		job.setInputFormatClass(TextInputFormat.class);
 
 		// Output
