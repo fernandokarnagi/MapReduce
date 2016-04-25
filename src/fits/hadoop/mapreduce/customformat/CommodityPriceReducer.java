@@ -4,8 +4,11 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.log4j.Logger;
 
 public class CommodityPriceReducer extends Reducer<Text, CommodityPriceBean, Text, CommodityPriceBean> {
+
+	private Logger logger = Logger.getLogger(CommodityPriceReducer.class);
 
 	@Override
 	protected void reduce(Text key, Iterable<CommodityPriceBean> value,
@@ -14,6 +17,8 @@ public class CommodityPriceReducer extends Reducer<Text, CommodityPriceBean, Tex
 
 		double total = 0;
 		int count = 0;
+
+		logger.info("Processing reducer key [" + key + "]");
 
 		double max = Double.MIN_VALUE;
 		double min = Double.MAX_VALUE;
@@ -30,7 +35,9 @@ public class CommodityPriceReducer extends Reducer<Text, CommodityPriceBean, Tex
 		}
 
 		double average = total / count;
-		context.write(new Text(key), new CommodityPriceBean(average, max, min, total, count));
+		CommodityPriceBean bean = new CommodityPriceBean(average, max, min, total, count);
+		logger.info("Emitting bean [" + bean + "]");
+		context.write(new Text(key), bean);
 	}
 
 }
